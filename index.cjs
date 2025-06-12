@@ -1,8 +1,29 @@
-const { join, dirname } = require('path');
+const winston = require('winston');
 
-// Basic CommonJS export example
-function myModuleCjs() {
-  return 'Hello from template CJS';
-}
+/**
+ * Factory to create a Winston logger instance.
+ * @param {Object} [options]
+ * @param {string} [options.level] - Log level (default: process.env.LOG_LEVEL or 'info')
+ * @param {Array} [options.transports] - Array of Winston transports (default: Console)
+ * @returns {winston.Logger}
+ */
+const createLogger = ({
+  level = process.env.LOG_LEVEL || 'info',
+  transports = [new winston.transports.Console()]
+} = {}) =>
+  winston.createLogger({
+    level,
+    format: winston.format.printf(({ level, message, ...meta }) => {
+      let msg = `[${level.toUpperCase()}] ${message}`;
+      const metaKeys = Object.keys(meta).filter(k => k !== 'level' && k !== 'message');
+      if (metaKeys.length > 0) {
+        msg += ' ' + JSON.stringify(Object.fromEntries(metaKeys.map(k => [k, meta[k]])));
+      }
+      return msg;
+    }),
+    transports
+  });
 
-module.exports = myModuleCjs;
+const log = createLogger();
+module.exports = log;
+module.exports.createLogger = createLogger;
