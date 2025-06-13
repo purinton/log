@@ -26,3 +26,4 @@ export const createLogger = ({
 
 const log = createLogger();
 export default log;
+export { log };

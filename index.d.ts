@@ -13,5 +13,5 @@ export declare function createLogger(options?: {
 /**
  * Default logger instance.
  */
-declare const log: import('winston').Logger;
+export declare const log: import('winston').Logger;
 export default log;
