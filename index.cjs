@@ -26,5 +26,4 @@ const createLogger = ({
 
 const log = createLogger();
 module.exports = log;
-module.exports.log = log;
 module.exports.createLogger = createLogger;

@@ -38,13 +38,11 @@ npm install @purinton/log
 ### ESM Example
 
 ```js
-// Default import
-import log from '@purinton/log';
-// Named import
-import { log, createLogger } from '@purinton/log';
+// Example usage for ESM
+import log, { log as namedLog, createLogger } from '@purinton/log';
 
-log.info('Hello from ESM (default import)!', { foo: 'bar' });
-log.info('Hello from ESM (named import)!', { foo: 'bar' });
+log.info('Hello from example.mjs (default import)', { foo: 'bar' });
+namedLog.info('Hello from example.mjs (named import)', { foo: 'bar' });
 
 const customLogger = createLogger({ level: 'debug' });
 customLogger.debug('Custom logger debug message', { custom: true });
@@ -53,14 +51,14 @@ customLogger.debug('Custom logger debug message', { custom: true });
 ### CommonJS Example
 
 ```js
-// Default require
+// Example usage for CommonJS
 const log = require('@purinton/log');
-// Named require
-const { log: namedLog, createLogger } = require('@purinton/log');
+log.info('Hello from example.cjs (default require)', { foo: 'bar' });
 
-log.info('Hello from CommonJS (default require)!', { foo: 'bar' });
-namedLog.info('Hello from CommonJS (named require)!', { foo: 'bar' });
+const namedLog = require('@purinton/log');
+namedLog.info('Hello from example.cjs (named require)', { foo: 'bar' });
 
+const { createLogger } = require('@purinton/log');
 const customLogger = createLogger({ level: 'debug' });
 customLogger.debug('Custom logger debug message', { custom: true });
 ```
