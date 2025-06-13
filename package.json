@@ -1,7 +1,7 @@
 {
     "name": "@purinton/log",
     "type": "module",
-    "version": "1.0.6",
+    "version": "1.0.7",
     "description": "A Node.js logging library.",
     "main": "index.cjs",
     "module": "index.mjs",
@@ -43,7 +43,7 @@
     },
     "homepage": "https://github.com/purinton/log#readme",
     "devDependencies": {
-        "jest": "^29.7.0"
+        "jest": "^30.0.0"
     },
     "jest": {
         "testEnvironment": "node",
