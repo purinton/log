@@ -10,8 +10,8 @@ const winston = require('winston');
 const createLogger = ({
   level = process.env.LOG_LEVEL || 'info',
   transports = [new winston.transports.Console()]
-} = {}) =>
-  winston.createLogger({
+} = {}) => {
+  const logger = winston.createLogger({
     level,
     format: winston.format.printf(({ level, message, ...meta }) => {
       let msg = `[${level.toUpperCase()}] ${message}`;
@@ -23,6 +23,20 @@ const createLogger = ({
     }),
     transports
   });
+
+  // Patch logger methods to support primitive/array as meta
+  const levels = Object.keys(logger.levels || winston.config.npm.levels);
+  levels.forEach((method) => {
+    const orig = logger[method];
+    logger[method] = function (msg, meta) {
+      if (arguments.length === 2 && (typeof meta !== 'object' || meta === null || Array.isArray(meta))) {
+        return orig.call(this, msg, { value: meta });
+      }
+      return orig.apply(this, arguments);
+    };
+  });
+  return logger;
+};
 
 const log = createLogger();
 module.exports = log;

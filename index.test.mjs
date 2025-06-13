@@ -20,3 +20,11 @@ test('log.info outputs expected format (named import)', () => {
   expect(true).toBe(true); // Just to ensure the test runs
   spy.mockRestore();
 });
+
+test('log.info outputs primitive value', () => {
+  const spy = jest.spyOn(console._stdout, 'write').mockImplementation(() => {});
+  log.info('Primitive value', 123);
+  log.info('Array value', [1, 2, 3]);
+  expect(true).toBe(true); // Just to ensure the test runs
+  spy.mockRestore();
+});

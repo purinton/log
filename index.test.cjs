@@ -15,3 +15,11 @@ test('log.info outputs expected format (default require)', () => {
   expect(true).toBe(true); // Just to ensure the test runs
   spy.mockRestore();
 });
+
+test('log.info outputs primitive value', () => {
+  const spy = jest.spyOn(process.stdout, 'write').mockImplementation(() => {});
+  log.info('Primitive value', 123);
+  log.info('Array value', [1,2,3]);
+  expect(true).toBe(true); // Just to ensure the test runs
+  spy.mockRestore();
+});

@@ -26,6 +26,9 @@
 - Supports both ESM and CommonJS
 - Default and named exports for maximum flexibility
 - TypeScript type definitions included
+- **Supports logging primitives and arrays as meta:**
+  - `log.info('msg', 42)` logs `{ value: 42 }`
+  - `log.info('msg', [1,2,3])` logs `{ value: [1,2,3] }`
 
 ## Installation
 
@@ -42,10 +45,15 @@ npm install @purinton/log
 import log, { log as namedLog, createLogger } from '@purinton/log';
 
 log.info('Hello from example.mjs (default import)', { foo: 'bar' });
+log.info('Primitive value', 42); // primitive value
+log.info('Array value', [1,2,3]); // array value
+
 namedLog.info('Hello from example.mjs (named import)', { foo: 'bar' });
+namedLog.info('Primitive value', 'test'); // primitive value
 
 const customLogger = createLogger({ level: 'debug' });
 customLogger.debug('Custom logger debug message', { custom: true });
+customLogger.debug('Primitive debug', true); // primitive value
 ```
 
 ### CommonJS Example
@@ -54,13 +62,17 @@ customLogger.debug('Custom logger debug message', { custom: true });
 // Example usage for CommonJS
 const log = require('@purinton/log');
 log.info('Hello from example.cjs (default require)', { foo: 'bar' });
+log.info('Primitive value', 42); // primitive value
+log.info('Array value', [1,2,3]); // array value
 
 const namedLog = require('@purinton/log');
 namedLog.info('Hello from example.cjs (named require)', { foo: 'bar' });
+namedLog.info('Primitive value', 'test'); // primitive value
 
 const { createLogger } = require('@purinton/log');
 const customLogger = createLogger({ level: 'debug' });
 customLogger.debug('Custom logger debug message', { custom: true });
+customLogger.debug('Primitive debug', true); // primitive value
 ```
 
 ## API
@@ -74,6 +86,11 @@ A pre-configured logger instance. Available as both the default and a named expo
 - `.warn(message, meta?)`
 - `.error(message, meta?)`
 - ...and all other [winston](https://github.com/winstonjs/winston) logger methods.
+
+**Meta argument:**
+
+- If you pass a primitive or array as the second argument, it will be logged as `{ value: ... }`.
+- If you pass an object, it will be logged as usual.
 
 ### createLogger(options)
 
@@ -91,8 +108,18 @@ Creates a new [winston](https://github.com/winstonjs/winston) logger instance.
 Type definitions are included:
 
 ```ts
-export declare function createLogger(options?: { level?: string; transports?: any[]; }): import('winston').Logger;
-export declare const log: import('winston').Logger;
+export declare function createLogger(options?: { level?: string; transports?: any[]; }): import('winston').Logger & {
+  debug(message: string, meta?: any): void;
+  info(message: string, meta?: any): void;
+  warn(message: string, meta?: any): void;
+  error(message: string, meta?: any): void;
+};
+export declare const log: import('winston').Logger & {
+  debug(message: string, meta?: any): void;
+  info(message: string, meta?: any): void;
+  warn(message: string, meta?: any): void;
+  error(message: string, meta?: any): void;
+};
 export default log;
 ```
 
