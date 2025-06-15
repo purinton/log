@@ -17,8 +17,16 @@ const createLogger = ({
       let msg = `[${level.toUpperCase()}] ${message}`;
       const metaKeys = Object.keys(meta).filter(k => k !== 'level' && k !== 'message');
       if (metaKeys.length > 0) {
-        const replacer = (key, value) =>
-          typeof value === 'bigint' ? value.toString() + 'n' : value;
+        // Custom replacer to handle BigInt and circular references
+        const seen = new WeakSet();
+        const replacer = (key, value) => {
+          if (typeof value === 'bigint') return value.toString() + 'n';
+          if (typeof value === 'object' && value !== null) {
+            if (seen.has(value)) return '[Circular]';
+            seen.add(value);
+          }
+          return value;
+        };
         msg += ' ' + JSON.stringify(Object.fromEntries(metaKeys.map(k => [k, meta[k]])), replacer);
       }
       return msg;
