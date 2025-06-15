@@ -17,7 +17,9 @@ const createLogger = ({
       let msg = `[${level.toUpperCase()}] ${message}`;
       const metaKeys = Object.keys(meta).filter(k => k !== 'level' && k !== 'message');
       if (metaKeys.length > 0) {
-        msg += ' ' + JSON.stringify(Object.fromEntries(metaKeys.map(k => [k, meta[k]])));
+        const replacer = (key, value) =>
+          typeof value === 'bigint' ? value.toString() + 'n' : value;
+        msg += ' ' + JSON.stringify(Object.fromEntries(metaKeys.map(k => [k, meta[k]])), replacer);
       }
       return msg;
     }),
